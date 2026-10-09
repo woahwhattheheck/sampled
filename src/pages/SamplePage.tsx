@@ -5,12 +5,11 @@ import { BsThreeDots } from "react-icons/bs";
 import { PiPauseCircleDuotone, PiPlayCircleDuotone } from "react-icons/pi";
 import { TradeSample } from "../components/music/TradeSample";
 import { useAudioPlayerContext } from "../context/audio-player-context";
-import { useGetSample, useHasPurchased } from "../hooks/useSampledContract";
+import { useGetSample } from "../hooks/useSampledContract";
 import { useParams } from "react-router-dom";
 import { truncateString } from "../util/string-helpers";
 import { Download } from "lucide-react";
 import { downloadAudio } from "../util/download-audio";
-import { useWallet } from "../hooks/useWallet";
 import { SEO } from "../components/shared/SEO";
 
 const SamplePage = () => {
@@ -28,9 +27,6 @@ const SamplePage = () => {
     playTrack(track);
   };
 
-  const { data: hasPurchased } = useHasPurchased(Number(id));
-  const { address } = useWallet();
-  const isSeller = address === data?.seller;
   return (
     <>
       <SEO
@@ -84,18 +80,29 @@ const SamplePage = () => {
                     onClick={handlePlayTrack}
                   />
                 )}
-                {(isSeller || hasPurchased) && (
-                  <Download
-                    size={27}
-                    className="cursor-pointer"
+                {data?.ipfs_link && (
+                  <button
+                    type="button"
+                    aria-label={`Download public audio: ${data.title}`}
+                    title="Public IPFS audio (no purchase needed)"
+                    className="inline-flex items-center justify-center text-primary"
                     onClick={() =>
-                      downloadAudio(data?.ipfs_link ?? "", `${data?.title}.mp3`)
+                      void downloadAudio(data.ipfs_link, `${data.title}.mp3`)
                     }
-                  />
+                  >
+                    <Download size={27} aria-hidden="true" />
+                  </button>
                 )}
                 <BsThreeDots />
                 {/* <PiPauseCircleDuotone className="text-[40px] md:text-[60px] text-primary" /> */}
               </div>
+              {data?.ipfs_link && (
+                <p className="mt-3 text-sm text-grey-200">
+                  This audio link is public on IPFS and can be downloaded without
+                  buying. Purchases record payment to the producer, not a
+                  technical access restriction or automatic usage licence.
+                </p>
+              )}
             </div>
 
             <div className="md:max-w-[25vw]">
