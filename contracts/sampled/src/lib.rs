@@ -113,7 +113,9 @@ impl Sampled {
         total_samples - 1
     }
 
-    /// GET a sample
+    /// Public read: the returned Sample includes its plaintext IPFS link.
+    /// Anyone can inspect this value on-chain without buying the sample. The
+    /// frontend must never claim the link is buyer-only or access-controlled.
     pub fn get_sample(env: Env, sample_id: u32) -> Result<Sample, Error> {
         let storage = env.storage().persistent();
         let sample_opt: Option<Sample> = storage.get(&sample_id);
@@ -279,7 +281,8 @@ impl Sampled {
             sample.price
         );
 
-        // Return IPFS link for download
+        // Return the same public IPFS link available via get_sample;
+        // payment records a purchase but does not gate the CID.
         Ok(sample.ipfs_link)
     }
 
