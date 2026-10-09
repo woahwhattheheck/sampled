@@ -113,7 +113,10 @@ impl Sampled {
         total_samples - 1
     }
 
-    /// GET a sample
+    /// Get public sample metadata. This is intentionally unauthenticated and
+    /// includes the IPFS content link; possession of the CID is NOT gated by
+    /// purchase or wallet status. Payments are recorded by purchase_sample,
+    /// not enforced by restricting this public read.
     pub fn get_sample(env: Env, sample_id: u32) -> Result<Sample, Error> {
         let storage = env.storage().persistent();
         let sample_opt: Option<Sample> = storage.get(&sample_id);
