@@ -17,6 +17,14 @@ Sampled leverages Stellar's speed and low costs to create a peer-to-peer sample 
 ✅ **Commercial Licensing**: Automatic license generation with each purchase  
 ✅ **Freighter Wallet Integration**: Seamless Web3 experience using Stellar Wallet Kit
 
+## Audio access model: public IPFS links
+
+**Audio downloads are public, not purchase-gated.** The Soroban `Sample` record contains a plaintext `ipfs_link`, which any network participant can read from contract state or through the public `get_sample(sample_id)` function. `purchase_sample` returns that same link after payment, but payment is **not required** to obtain the link, and hiding a Download button cannot enforce exclusivity.
+
+The sample page and purchase panel therefore offer public audio downloads while still letting listeners record an on-chain purchase to support the seller. Purchase status is an accounting/product signal, **not encryption, access control, DRM, or proof that an exclusive license is technically enforced**. Producers should not upload confidential files or exclusive masters expecting the frontend button to protect them.
+
+True purchaser-only delivery would require a different architecture, such as storing encrypted files and releasing decryption keys through a separate authenticated entitlement service. No such key-delivery system exists in this repository; the current on-chain contract must be treated as public-content distribution.
+
 ### Technical Implementation:
 
 - **Smart Contract**: Rust-based Soroban contract handling listings, purchases, and withdrawals
