@@ -13,6 +13,7 @@
     "install:contracts": "npm install --workspace=packages && npm run build --workspace=packages",
     "preview": "vite preview",
     "lint": "eslint .",
+    "audit": "npm audit --audit-level=high",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "prepare": "husky",
