@@ -102,10 +102,14 @@ export const PurchaseSampleTab = ({ sample }: { sample: Sample }) => {
         )}
       </div>
 
-      {!hasPurchased && !isSeller ? (
-        <div className="space-y-2">
+      <div className="space-y-2">
+        <p className="text-xs text-grey-300">
+          This sample's IPFS audio link is public on-chain, not technically
+          purchase-gated. Buying records a purchase and supports the seller.
+        </p>
+        {!hasPurchased && !isSeller && (
           <Button
-            className={` w-full !h-[45px]`}
+            className="w-full !h-[45px]"
             type="primary"
             size="large"
             loading={isPurchasing}
@@ -113,21 +117,20 @@ export const PurchaseSampleTab = ({ sample }: { sample: Sample }) => {
           >
             Buy sample
           </Button>
-        </div>
-      ) : (
-        <div className="space-y-2">
+        )}
+        {sample?.ipfs_link && (
           <Button
-            className={` w-full !h-[45px]`}
-            type="primary"
+            className="w-full !h-[45px]"
+            type={hasPurchased || isSeller ? "primary" : "default"}
             size="large"
             onClick={() =>
-              downloadAudio(sample?.ipfs_link, `${sample?.title}.mp3`)
+              downloadAudio(sample.ipfs_link, `${sample.title}.mp3`)
             }
           >
-            Download sample
+            Download public audio
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
